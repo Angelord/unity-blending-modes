@@ -1,6 +1,6 @@
 ﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
 
-Shader "Custom/BlendModes/Substract"
+Shader "Custom/BlendModes/Subtract"
 {
 	Properties
 	{
@@ -52,23 +52,9 @@ Shader "Custom/BlendModes/Substract"
 				return o;
 			}
 			
-			inline fixed blendSubstract(fixed base, fixed blend)
+			fixed3 blendSubtract(fixed3 base, fixed3 blend, fixed opacity)
 			{
-				return max(base + blend - 1.0, 0.0);
-			}
-
-			fixed3 blendSubstract(fixed3 base, fixed3 blend)
-			{
-				return fixed3(
-					blendSubstract(base.r, blend.r),
-					blendSubstract(base.g, blend.g),
-					blendSubstract(base.b, blend.b)
-				);
-			}
-
-			fixed3 blendSubstract(fixed3 base, fixed3 blend, fixed opacity)
-			{
-				return (blendSubstract(base, blend) * opacity + base * (1.0 - opacity));
+				return ((base - blend) * opacity + base * (1.0 - opacity));
 			}
 
 			fixed3 frag(v2f i) : SV_Target
@@ -76,7 +62,7 @@ Shader "Custom/BlendModes/Substract"
 				float4 baseColor = tex2Dproj(_GrabTexture, i.screen);
 				float4 texColor = tex2D(_MainTex, i.uv) * _Color;
 
-				return blendSubstract(baseColor, texColor, texColor.a);
+				return blendSubtract(baseColor, texColor, texColor.a);
 			}
 			ENDCG
 		}
