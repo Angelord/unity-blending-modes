@@ -1,6 +1,6 @@
 ﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
 
-Shader "Custom/BlendModes/ColorBurn"
+Shader "Custom/BlendModes/VividLight"
 {
 	Properties
 	{
@@ -52,13 +52,32 @@ Shader "Custom/BlendModes/ColorBurn"
 				o.uv = TRANSFORM_TEX(v.uv, _MainTex);
 				return o;
 			}
+			
+			inline fixed blendVividLight(fixed base, fixed blend)
+			{
+				return (blend < 0.5) ? blendColorBurn(base, (2.0 * blend)) : blendColorDodge(base, (2.0 * (blend - 0.5)));
+			}
+
+			fixed3 blendVividLight(fixed3 base, fixed3 blend)
+			{
+				return fixed3(
+					blendVividLight(base.r, blend.r),
+					blendVividLight(base.g, blend.g),
+					blendVividLight(base.b, blend.b)
+				);
+			}
+
+			fixed3 blendVividLight(fixed3 base, fixed3 blend, fixed opacity)
+			{
+				return (blendVividLight(base, blend) * opacity + base * (1.0 - opacity));
+			}
 
 			fixed3 frag(v2f i) : SV_Target
 			{
 				float4 baseColor = tex2Dproj(_GrabTexture, i.screen);
 				float4 texColor = tex2D(_MainTex, i.uv) * _Color;
 
-				return blendColorBurn(baseColor, texColor, texColor.a);
+				return blendVividLight(baseColor, texColor, texColor.a);
 			}
 			ENDCG
 		}

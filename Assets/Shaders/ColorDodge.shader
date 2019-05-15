@@ -24,6 +24,7 @@ Shader "Custom/BlendModes/ColorDodge"
 			#pragma fragment frag
 
 			#include "UnityCG.cginc"
+			#include "BlendModes.cginc"
 
 			float4 _Color;
 			sampler2D _MainTex;
@@ -50,25 +51,6 @@ Shader "Custom/BlendModes/ColorDodge"
 				o.screen = ComputeGrabScreenPos(o.vertex);
 				o.uv = TRANSFORM_TEX(v.uv, _MainTex);
 				return o;
-			}
-			
-			fixed blendColorDodge(fixed base, fixed blend) 
-			{
-				return (blend == 1.0) ? blend : min(base / (1.0 - blend), 1.0);
-			}
-
-			fixed3 blendColorDodge(fixed3 base, fixed3 blend)
-			{
-				return fixed3(
-					blendColorDodge(base.r, blend.r),
-					blendColorDodge(base.g, blend.g),
-					blendColorDodge(base.b, blend.b)
-				);
-			}
-
-			fixed3 blendColorDodge(fixed3 base, fixed3 blend, fixed opacity)
-			{
-				return (blendColorDodge(base, blend) * opacity + base * (1.0 - opacity));
 			}
 
 			fixed3 frag(v2f i) : SV_Target
