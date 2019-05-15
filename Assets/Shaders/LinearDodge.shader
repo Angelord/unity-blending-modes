@@ -24,6 +24,7 @@ Shader "Custom/BlendModes/LinearDodge"
 			#pragma fragment frag
 
 			#include "UnityCG.cginc"
+			#include "BlendModes.cginc"
 
 			float4 _Color;
 			sampler2D _MainTex;
@@ -50,25 +51,6 @@ Shader "Custom/BlendModes/LinearDodge"
 				o.screen = ComputeGrabScreenPos(o.vertex);
 				o.uv = TRANSFORM_TEX(v.uv, _MainTex);
 				return o;
-			}
-			
-			fixed blendLinearDodge(fixed base, fixed blend)
-			{
-				return min(base + blend, 1.0);
-			}
-
-			fixed3 blendLinearDodge(fixed3 base, fixed3 blend)
-			{
-				return fixed3(
-					blendLinearDodge(base.r, blend.r),
-					blendLinearDodge(base.g, blend.g),
-					blendLinearDodge(base.b, blend.b)
-				);
-			}
-
-			fixed3 blendLinearDodge(fixed3 base, fixed3 blend, fixed opacity)
-			{
-				return (blendLinearDodge(base, blend) * opacity + base * (1.0 - opacity));
 			}
 
 			fixed3 frag(v2f i) : SV_Target

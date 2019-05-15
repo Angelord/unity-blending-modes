@@ -16,6 +16,16 @@ inline fixed blendColorDodge(fixed base, fixed blend)
 	return (blend == 1.0) ? blend : min(base / (1.0 - blend), 1.0);
 }
 
+inline fixed blendLinearBurn(fixed base, fixed blend)
+{
+	return max(base + blend - 1.0, 0.0);
+}
+
+inline fixed blendLinearDodge(fixed base, fixed blend)
+{
+	return min(base + blend, 1.0);
+}
+
 
 fixed3 blendOverlay(fixed3 base, fixed3 blend)
 {
@@ -49,6 +59,24 @@ fixed3 blendColorDodge(fixed3 base, fixed3 blend)
 	);
 }
 
+fixed3 blendLinearBurn(fixed3 base, fixed3 blend)
+{
+	return fixed3(
+		blendLinearBurn(base.r, blend.r),
+		blendLinearBurn(base.g, blend.g),
+		blendLinearBurn(base.b, blend.b)
+	);
+}
+
+fixed3 blendLinearDodge(fixed3 base, fixed3 blend)
+{
+	return fixed3(
+		blendLinearDodge(base.r, blend.r),
+		blendLinearDodge(base.g, blend.g),
+		blendLinearDodge(base.b, blend.b)
+	);
+}
+
 
 fixed3 blendOverlay(fixed3 base, fixed3 blend, fixed opacity)
 {
@@ -68,6 +96,16 @@ fixed3 blendColorBurn(fixed3 base, fixed3 blend, fixed opacity)
 fixed3 blendColorDodge(fixed3 base, fixed3 blend, fixed opacity)
 {
 	return (blendColorDodge(base, blend) * opacity + base * (1.0 - opacity));
+}
+
+fixed3 blendLinearBurn(fixed3 base, fixed3 blend, fixed opacity)
+{
+	return (blendLinearBurn(base, blend) * opacity + base * (1.0 - opacity));
+}
+
+fixed3 blendLinearDodge(fixed3 base, fixed3 blend, fixed opacity)
+{
+	return (blendLinearDodge(base, blend) * opacity + base * (1.0 - opacity));
 }
 
 

@@ -1,6 +1,6 @@
 ﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
 
-Shader "Custom/BlendModes/LinearBurn"
+Shader "Custom/BlendModes/LinearLight"
 {
 	Properties
 	{
@@ -52,13 +52,32 @@ Shader "Custom/BlendModes/LinearBurn"
 				o.uv = TRANSFORM_TEX(v.uv, _MainTex);
 				return o;
 			}
+			
+			inline fixed blendLinearLight(fixed base, fixed blend)
+			{
+				return blend < 0.5 ? blendLinearBurn(base, (2.0*blend)) : blendLinearDodge(base, (2.0*(blend - 0.5)));
+			}
+
+			fixed3 blendLinearLight(fixed3 base, fixed3 blend)
+			{
+				return fixed3(
+					blendLinearLight(base.r, blend.r),
+					blendLinearLight(base.g, blend.g),
+					blendLinearLight(base.b, blend.b)
+				);
+			}
+
+			fixed3 blendLinearLight(fixed3 base, fixed3 blend, fixed opacity)
+			{
+				return (blendLinearLight(base, blend) * opacity + base * (1.0 - opacity));
+			}
 
 			fixed3 frag(v2f i) : SV_Target
 			{
 				float4 baseColor = tex2Dproj(_GrabTexture, i.screen);
 				float4 texColor = tex2D(_MainTex, i.uv) * _Color;
 
-				return blendLinearBurn(baseColor, texColor, texColor.a);
+				return blendLinearLight(baseColor, texColor, texColor.a);
 			}
 			ENDCG
 		}

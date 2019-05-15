@@ -1,6 +1,6 @@
 ﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
 
-Shader "Custom/BlendModes/LinearBurn"
+Shader "Custom/BlendModes/Difference"
 {
 	Properties
 	{
@@ -24,7 +24,6 @@ Shader "Custom/BlendModes/LinearBurn"
 			#pragma fragment frag
 
 			#include "UnityCG.cginc"
-			#include "BlendModes.cginc"
 
 			float4 _Color;
 			sampler2D _MainTex;
@@ -53,12 +52,17 @@ Shader "Custom/BlendModes/LinearBurn"
 				return o;
 			}
 
+			inline fixed3 blendDifference(fixed3 base, fixed3 blend, fixed opacity)
+			{
+				return (abs(base - blend) * opacity + base * (1.0 - opacity));
+			}
+
 			fixed3 frag(v2f i) : SV_Target
 			{
 				float4 baseColor = tex2Dproj(_GrabTexture, i.screen);
 				float4 texColor = tex2D(_MainTex, i.uv) * _Color;
 
-				return blendLinearBurn(baseColor, texColor, texColor.a);
+				return blendDifference(baseColor, texColor, texColor.a);
 			}
 			ENDCG
 		}
