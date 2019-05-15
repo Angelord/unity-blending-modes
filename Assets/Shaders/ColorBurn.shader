@@ -14,7 +14,7 @@ Shader "Custom/BlendModes/ColorBurn"
 
 		GrabPass
 		{
-			"_GrabTexture"
+			"_ColorBurnGrabTex"
 		}
 
 		Pass
@@ -29,7 +29,7 @@ Shader "Custom/BlendModes/ColorBurn"
 			float4 _Color;
 			sampler2D _MainTex;
 			float4 _MainTex_ST;
-			sampler2D _GrabTexture;
+			sampler2D _ColorBurnGrabTex;
 
 			struct appdata
 			{
@@ -55,7 +55,7 @@ Shader "Custom/BlendModes/ColorBurn"
 
 			fixed3 frag(v2f i) : SV_Target
 			{
-				float4 baseColor = tex2Dproj(_GrabTexture, i.screen);
+				float4 baseColor = tex2Dproj(_ColorBurnGrabTex, i.screen);
 				float4 texColor = tex2D(_MainTex, i.uv) * _Color;
 
 				return blendColorBurn(baseColor, texColor, texColor.a);

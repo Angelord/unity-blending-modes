@@ -14,7 +14,7 @@ Shader "Custom/BlendModes/LinearLight"
 
 		GrabPass
 		{
-			"_GrabTexture"
+			"_LinearLightGrabTex"
 		}
 
 		Pass
@@ -29,7 +29,7 @@ Shader "Custom/BlendModes/LinearLight"
 			float4 _Color;
 			sampler2D _MainTex;
 			float4 _MainTex_ST;
-			sampler2D _GrabTexture;
+			sampler2D _LinearLightGrabTex;
 
 			struct appdata
 			{
@@ -74,7 +74,7 @@ Shader "Custom/BlendModes/LinearLight"
 
 			fixed3 frag(v2f i) : SV_Target
 			{
-				float4 baseColor = tex2Dproj(_GrabTexture, i.screen);
+				float4 baseColor = tex2Dproj(_LinearLightGrabTex, i.screen);
 				float4 texColor = tex2D(_MainTex, i.uv) * _Color;
 
 				return blendLinearLight(baseColor, texColor, texColor.a);

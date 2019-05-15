@@ -14,7 +14,7 @@ Shader "Custom/BlendModes/Multiply"
 
 		GrabPass
 		{
-			"_GrabTexture"
+			"_MultiplyGrabTex"
 		}
 
 		Pass
@@ -28,7 +28,7 @@ Shader "Custom/BlendModes/Multiply"
 			float4 _Color;
 			sampler2D _MainTex;
 			float4 _MainTex_ST;
-			sampler2D _GrabTexture;
+			sampler2D _MultiplyGrabTex;
 
 			struct appdata
 			{
@@ -64,8 +64,8 @@ Shader "Custom/BlendModes/Multiply"
 
 			fixed3 frag(v2f i) : SV_Target
 			{
+				float4 baseColor = tex2Dproj(_MultiplyGrabTex, i.screen);
 				float4 texColor = tex2D(_MainTex, i.uv) * _Color;
-				float4 baseColor = tex2Dproj(_GrabTexture, i.screen);
 
 				return blendMultiply(baseColor, texColor, texColor.a);
 			}

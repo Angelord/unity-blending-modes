@@ -14,7 +14,7 @@ Shader "Custom/BlendModes/Exclusion"
 
 		GrabPass
 		{
-			"_GrabTexture"
+			"_ExclusionGrabTex"
 		}
 
 		Pass
@@ -28,7 +28,7 @@ Shader "Custom/BlendModes/Exclusion"
 			float4 _Color;
 			sampler2D _MainTex;
 			float4 _MainTex_ST;
-			sampler2D _GrabTexture;
+			sampler2D _ExclusionGrabTex;
 
 			struct appdata
 			{
@@ -64,7 +64,7 @@ Shader "Custom/BlendModes/Exclusion"
 
 			fixed3 frag(v2f i) : SV_Target
 			{
-				float4 baseColor = tex2Dproj(_GrabTexture, i.screen);
+				float4 baseColor = tex2Dproj(_ExclusionGrabTex, i.screen);
 				float4 texColor = tex2D(_MainTex, i.uv) * _Color;
 
 				return blendExclusion(baseColor, texColor, texColor.a);

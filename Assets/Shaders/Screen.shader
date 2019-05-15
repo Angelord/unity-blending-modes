@@ -14,7 +14,7 @@ Shader "Custom/BlendModes/Screen"
 
 		GrabPass
 		{
-			"_GrabTexture"
+			"_ScreenGrabTex"
 		}
 
 		Pass
@@ -28,7 +28,7 @@ Shader "Custom/BlendModes/Screen"
 			float4 _Color;
 			sampler2D _MainTex;
 			float4 _MainTex_ST;
-			sampler2D _GrabTexture;
+			sampler2D _ScreenGrabTex;
 
 			struct appdata
 			{
@@ -73,7 +73,7 @@ Shader "Custom/BlendModes/Screen"
 
 			fixed3 frag(v2f i) : SV_Target
 			{
-				float4 baseColor = tex2Dproj(_GrabTexture, i.screen);
+				float4 baseColor = tex2Dproj(_ScreenGrabTex, i.screen);
 				float4 texColor = tex2D(_MainTex, i.uv) * _Color;
 
 				return blendScreen(baseColor, texColor, texColor.a);

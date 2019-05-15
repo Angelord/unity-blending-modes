@@ -14,7 +14,7 @@ Shader "Custom/BlendModes/HardLight"
 
 		GrabPass
 		{
-			"_GrabTexture"
+			"_HardLightGrabTex"
 		}
 
 		Pass
@@ -29,7 +29,7 @@ Shader "Custom/BlendModes/HardLight"
 			float4 _Color;
 			sampler2D _MainTex;
 			float4 _MainTex_ST;
-			sampler2D _GrabTexture;
+			sampler2D _HardLightGrabTex;
 
 			struct appdata
 			{
@@ -55,7 +55,7 @@ Shader "Custom/BlendModes/HardLight"
 			
 			fixed3 frag(v2f i) : SV_Target
 			{
-				float4 baseColor = tex2Dproj(_GrabTexture, i.screen);
+				float4 baseColor = tex2Dproj(_HardLightGrabTex, i.screen);
 				float4 texColor = tex2D(_MainTex, i.uv) * _Color;
 
 				return blendHardLight(baseColor, texColor, texColor.a);

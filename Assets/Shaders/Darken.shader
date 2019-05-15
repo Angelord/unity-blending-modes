@@ -14,7 +14,7 @@ Shader "Custom/BlendModes/Darken"
 
 		GrabPass
 		{
-			"_GrabTexture"
+			"_DarkenGrabTex"
 		}
 
 		Pass
@@ -28,7 +28,7 @@ Shader "Custom/BlendModes/Darken"
 			float4 _Color;
 			sampler2D _MainTex;
 			float4 _MainTex_ST;
-			sampler2D _GrabTexture;
+			sampler2D _DarkenGrabTex;
 
 			struct appdata
 			{
@@ -69,7 +69,7 @@ Shader "Custom/BlendModes/Darken"
 			fixed3 frag(v2f i) : SV_Target
 			{
 				float4 texColor = tex2D(_MainTex, i.uv) * _Color;
-				float4 baseColor = tex2Dproj(_GrabTexture, i.screen);
+				float4 baseColor = tex2Dproj(_DarkenGrabTex, i.screen);
 
 				return blendDarken(baseColor, texColor, texColor.a);
 			}

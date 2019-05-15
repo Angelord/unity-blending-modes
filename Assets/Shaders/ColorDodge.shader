@@ -14,7 +14,7 @@ Shader "Custom/BlendModes/ColorDodge"
 
 		GrabPass
 		{
-			"_GrabTexture"
+			"_ColorDodgeGrabTex"
 		}
 
 		Pass
@@ -29,7 +29,7 @@ Shader "Custom/BlendModes/ColorDodge"
 			float4 _Color;
 			sampler2D _MainTex;
 			float4 _MainTex_ST;
-			sampler2D _GrabTexture;
+			sampler2D _ColorDodgeGrabTex;
 
 			struct appdata
 			{
@@ -55,7 +55,7 @@ Shader "Custom/BlendModes/ColorDodge"
 
 			fixed3 frag(v2f i) : SV_Target
 			{
-				float4 baseColor = tex2Dproj(_GrabTexture, i.screen);
+				float4 baseColor = tex2Dproj(_ColorDodgeGrabTex, i.screen);
 				float4 texColor = tex2D(_MainTex, i.uv) * _Color;
 
 				return blendColorDodge(baseColor, texColor, texColor.a);

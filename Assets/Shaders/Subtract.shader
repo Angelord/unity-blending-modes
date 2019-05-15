@@ -14,7 +14,7 @@ Shader "Custom/BlendModes/Subtract"
 
 		GrabPass
 		{
-			"_GrabTexture"
+			"_SubtractGrabTex"
 		}
 
 		Pass
@@ -28,7 +28,7 @@ Shader "Custom/BlendModes/Subtract"
 			float4 _Color;
 			sampler2D _MainTex;
 			float4 _MainTex_ST;
-			sampler2D _GrabTexture;
+			sampler2D _SubtractGrabTex;
 
 			struct appdata
 			{
@@ -59,7 +59,7 @@ Shader "Custom/BlendModes/Subtract"
 
 			fixed3 frag(v2f i) : SV_Target
 			{
-				float4 baseColor = tex2Dproj(_GrabTexture, i.screen);
+				float4 baseColor = tex2Dproj(_SubtractGrabTex, i.screen);
 				float4 texColor = tex2D(_MainTex, i.uv) * _Color;
 
 				return blendSubtract(baseColor, texColor, texColor.a);
