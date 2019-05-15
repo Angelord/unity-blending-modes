@@ -1,6 +1,6 @@
 ﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
 
-Shader "Custom/BlendModes/Overlay"
+Shader "Custom/BlendModes/Darken"
 {
 	Properties
 	{
@@ -51,25 +51,20 @@ Shader "Custom/BlendModes/Overlay"
 				o.uv = TRANSFORM_TEX(v.uv, _MainTex);
 				return o;
 			}
-			
-			fixed blendOverlay(fixed base, fixed blend) 
-			{
-				return base < 0.5 ? (2.0 * base * blend) : (1.0 - 2.0 * (1.0 - base) * (1.0 - blend));
-			}
 
-			fixed4 blendOverlay(fixed4 base, fixed4 blend) 
+			fixed4 blendDarken(fixed4 base, fixed4 blend)
 			{
 				return fixed4(
-					blendOverlay(base.r, blend.r),
-					blendOverlay(base.g, blend.g),
-					blendOverlay(base.b, blend.b),
+					min(base.r, blend.r),
+					min(base.g, blend.g),
+					min(base.b, blend.b),
 					base.a
 				);
 			}
 
-			fixed4 blendOverlay(fixed4 base, fixed4 blend, fixed opacity)
+			fixed4 blendDarken(fixed4 base, fixed4 blend, fixed opacity)
 			{
-				return (blendOverlay(base, blend) * opacity + base * (1.0 - opacity));
+				return (blendDarken(base, blend) * opacity + base * (1.0 - opacity));
 			}
 
 			fixed4 frag(v2f i) : SV_Target
@@ -77,7 +72,7 @@ Shader "Custom/BlendModes/Overlay"
 				float4 texColor = tex2D(_MainTex, i.uv) * _Color;
 				float4 baseColor = tex2Dproj(_GrabTexture, i.screen);
 
-				return blendOverlay(baseColor, texColor, texColor.a);
+				return blendDarken(baseColor, texColor, texColor.a);
 			}
 			ENDCG
 		}
