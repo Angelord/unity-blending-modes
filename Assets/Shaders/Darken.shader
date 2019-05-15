@@ -52,22 +52,21 @@ Shader "Custom/BlendModes/Darken"
 				return o;
 			}
 
-			fixed4 blendDarken(fixed4 base, fixed4 blend)
+			fixed3 blendDarken(fixed3 base, fixed3 blend)
 			{
-				return fixed4(
+				return fixed3(
 					min(base.r, blend.r),
 					min(base.g, blend.g),
-					min(base.b, blend.b),
-					base.a
+					min(base.b, blend.b)
 				);
 			}
 
-			fixed4 blendDarken(fixed4 base, fixed4 blend, fixed opacity)
+			fixed3 blendDarken(fixed3 base, fixed3 blend, fixed opacity)
 			{
 				return (blendDarken(base, blend) * opacity + base * (1.0 - opacity));
 			}
 
-			fixed4 frag(v2f i) : SV_Target
+			fixed3 frag(v2f i) : SV_Target
 			{
 				float4 texColor = tex2D(_MainTex, i.uv) * _Color;
 				float4 baseColor = tex2Dproj(_GrabTexture, i.screen);

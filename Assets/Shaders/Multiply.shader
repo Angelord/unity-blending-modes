@@ -52,17 +52,17 @@ Shader "Custom/BlendModes/Multiply"
 				return o;
 			}
 			
-			fixed4 blendMultiply(fixed4 base, fixed4 blend)
+			fixed3 blendMultiply(fixed3 base, fixed3 blend)
 			{
 				return base * blend;
 			}
 
-			fixed4 blendMultiply(fixed4 base, fixed4 blend, fixed opacity)
+			fixed3 blendMultiply(fixed3 base, fixed3 blend, fixed opacity)
 			{
 				return (blendMultiply(base, blend) * opacity + base * (1.0 - opacity));
 			}
 
-			fixed4 frag(v2f i) : SV_Target
+			fixed3 frag(v2f i) : SV_Target
 			{
 				float4 texColor = tex2D(_MainTex, i.uv) * _Color;
 				float4 baseColor = tex2Dproj(_GrabTexture, i.screen);

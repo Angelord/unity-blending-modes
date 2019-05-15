@@ -57,25 +57,24 @@ Shader "Custom/BlendModes/Overlay"
 				return base < 0.5 ? (2.0 * base * blend) : (1.0 - 2.0 * (1.0 - base) * (1.0 - blend));
 			}
 
-			fixed4 blendOverlay(fixed4 base, fixed4 blend) 
+			fixed3 blendOverlay(fixed3 base, fixed3 blend) 
 			{
-				return fixed4(
+				return fixed3(
 					blendOverlay(base.r, blend.r),
 					blendOverlay(base.g, blend.g),
-					blendOverlay(base.b, blend.b),
-					base.a
+					blendOverlay(base.b, blend.b)
 				);
 			}
 
-			fixed4 blendOverlay(fixed4 base, fixed4 blend, fixed opacity)
+			fixed3 blendOverlay(fixed3 base, fixed3 blend, fixed opacity)
 			{
 				return (blendOverlay(base, blend) * opacity + base * (1.0 - opacity));
 			}
 
-			fixed4 frag(v2f i) : SV_Target
+			fixed3 frag(v2f i) : SV_Target
 			{
-				float4 texColor = tex2D(_MainTex, i.uv) * _Color;
 				float4 baseColor = tex2Dproj(_GrabTexture, i.screen);
+				float4 texColor = tex2D(_MainTex, i.uv) * _Color;
 
 				return blendOverlay(baseColor, texColor, texColor.a);
 			}
