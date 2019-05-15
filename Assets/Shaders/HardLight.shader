@@ -1,6 +1,6 @@
 ﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
 
-Shader "Custom/BlendModes/Overlay"
+Shader "Custom/BlendModes/HardLight"
 {
 	Properties
 	{
@@ -52,13 +52,13 @@ Shader "Custom/BlendModes/Overlay"
 				o.uv = TRANSFORM_TEX(v.uv, _MainTex);
 				return o;
 			}
-
+			
 			fixed3 frag(v2f i) : SV_Target
 			{
 				float4 baseColor = tex2Dproj(_GrabTexture, i.screen);
 				float4 texColor = tex2D(_MainTex, i.uv) * _Color;
 
-				return blendOverlay(baseColor, texColor, texColor.a);
+				return blendHardLight(baseColor, texColor, texColor.a);
 			}
 			ENDCG
 		}
